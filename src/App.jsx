@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import spinner from "./assets/img/spinner.webp";
+import { Loader } from "./components/Loader";
 import {
     WiHumidity,
     WiBarometer,
@@ -26,17 +26,21 @@ export const App = () => {
             }`
         )
             .then((res) => {
+                console.log(res);
                 if (!res.ok) {
-                    throw new Error("An error...");
+                    throw new Error(`${res.status - res.statusText}`);
                 }
                 return res.json();
             })
             .then((data) => {
+                console.log(data);
                 setDataWeather(data);
                 setIsLoading(false);
                 setIsError(false);
             })
-            .catch(() => setIsError(true));
+            .catch(() => {
+                setIsError(true);
+            });
     }, []);
 
     let today = new Date();
@@ -52,115 +56,95 @@ export const App = () => {
 
     return (
         <>
+            {isError && (
+                <p className="text-white text-sm text-center p-5">
+                    Try again in a few minutes...
+                </p>
+            )}
             {isLoading ? (
-                <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-                    <img
-                        src={spinner}
-                        alt="Loading..."
-                        className="w-24 mx-auto"
-                    />
-                    <p className="text-white text-xl text-center">
-                        Loading... Retry in a few minutes...
-                    </p>
-                </div>
+                <Loader />
             ) : (
                 <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-white shadow-2xl shadow-sky-950 mt-24 mb-24 sm:mb-0 sm:mt-0">
-                    {dataWeather ? (
-                        <div className="mx-20 px-1 py-12 sm:mx-0 sm:p-12 text-center">
-                            <div className="flex flex-col sm:flex-row gap-5 ">
-                                <img
-                                    src={`${convertIntoWeatherIcon(
-                                        dataWeather.data?.current.weather.ic
-                                    )}`}
-                                    alt="Weather icon"
-                                    className="basis-1/3 self-center w-1/2 sm:w-1/4"
-                                />
-                                <div className="basis-2/3 self-center">
-                                    <h1 className="text-2xl sm:text-3xl font-semibold break-words mb-3">
-                                        {dataWeather.data?.city},{" "}
-                                        {dataWeather.data?.state},{" "}
-                                        {dataWeather.data?.country}{" "}
-                                    </h1>
-                                    <p className="italic sm:text-xl mb-4">
-                                        {date}, {time}
+                    <div className="mx-20 px-1 py-12 sm:mx-0 sm:p-12 text-center">
+                        <div className="flex flex-col sm:flex-row gap-5 ">
+                            <img
+                                src={`${convertIntoWeatherIcon(
+                                    dataWeather.data?.current.weather.ic
+                                )}`}
+                                alt="Weather icon"
+                                className="basis-1/3 self-center w-1/2 sm:w-1/4"
+                            />
+                            <div className="basis-2/3 self-center">
+                                <h1 className="text-2xl sm:text-3xl font-semibold break-words mb-3">
+                                    {dataWeather.data?.city},{" "}
+                                    {dataWeather.data?.state},{" "}
+                                    {dataWeather.data?.country}{" "}
+                                </h1>
+                                <p className="italic sm:text-xl mb-4">
+                                    {date}, {time}
+                                </p>
+                                <div className="flex gap-6 sm:text-xl justify-center">
+                                    <p className="flex gap-1 ">
+                                        <IconContext.Provider
+                                            value={{ size: 26 }}
+                                        >
+                                            <LiaTemperatureLowSolid className="self-center" />
+                                        </IconContext.Provider>
+                                        {dataWeather.data?.current.weather.tp}
+                                        °C
                                     </p>
-                                    <div className="flex gap-6 sm:text-xl justify-center">
-                                        <p className="flex gap-1 ">
-                                            <IconContext.Provider
-                                                value={{ size: 26 }}
-                                            >
-                                                <LiaTemperatureLowSolid className="self-center" />
-                                            </IconContext.Provider>
-                                            {
-                                                dataWeather.data?.current
-                                                    .weather.tp
-                                            }
-                                            °C
-                                        </p>
-                                        <p className="flex gap-1">
-                                            <IconContext.Provider
-                                                value={{ size: 26 }}
-                                            >
-                                                <WiHumidity className="self-center" />
-                                            </IconContext.Provider>
-                                            {
-                                                dataWeather.data?.current
-                                                    .weather.hu
-                                            }
-                                            %
-                                        </p>
-                                    </div>
+                                    <p className="flex gap-1">
+                                        <IconContext.Provider
+                                            value={{ size: 26 }}
+                                        >
+                                            <WiHumidity className="self-center" />
+                                        </IconContext.Provider>
+                                        {dataWeather.data?.current.weather.hu}%
+                                    </p>
                                 </div>
                             </div>
-                            <div className="flex flex-col sm:flex-row gap-2 sm:gap-5 mb-5 justify-around sm:text-xl mt-8">
-                                <p className="flex gap-1">
-                                    <IconContext.Provider value={{ size: 26 }}>
-                                        <WiStrongWind className="self-center" />
-                                    </IconContext.Provider>
-                                    {Math.round(
-                                        dataWeather.data?.current.weather.ws *
-                                            3.6
-                                    )}{" "}
-                                    km/h
-                                </p>
-                                <p className="flex gap-1">
-                                    <IconContext.Provider value={{ size: 26 }}>
-                                        <WiWindDeg className="self-center" />{" "}
-                                    </IconContext.Provider>
-                                    {convertWindSpeed(
-                                        dataWeather.data?.current.weather.wd
-                                    )}
-                                </p>
-                                <p className="flex gap-1">
-                                    <IconContext.Provider value={{ size: 30 }}>
-                                        <WiBarometer className="self-center" />
-                                    </IconContext.Provider>
-                                    {dataWeather.data?.current.weather.pr}&nbsp;
-                                    HPa
-                                </p>
-                            </div>
-                            <div className="flex flex-col gap-2 sm:gap-5 mt-10">
-                                <h2 className="text-2xl font-semibold">
-                                    Air Quality Index
-                                </h2>
-                                <p
-                                    className={`text-center text-xl border-2 p-3 ${changeColorWithAQI(
-                                        dataWeather.data?.current.pollution
-                                            .aqius
-                                    )} border-none font-semibold`}
-                                >
-                                    {dataWeather.data?.current.pollution.aqius}{" "}
-                                    -{" "}
-                                    {convertAQIIntoMessage(
-                                        dataWeather.data?.current.pollution
-                                            .aqius
-                                    )}
-                                </p>
-                            </div>
                         </div>
-                    ) : (
-                        <p>Aucune données... ${isError}</p>
-                    )}
+                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-5 mb-5 justify-around sm:text-xl mt-8">
+                            <p className="flex gap-1">
+                                <IconContext.Provider value={{ size: 26 }}>
+                                    <WiStrongWind className="self-center" />
+                                </IconContext.Provider>
+                                {Math.round(
+                                    dataWeather.data?.current.weather.ws * 3.6
+                                )}{" "}
+                                km/h
+                            </p>
+                            <p className="flex gap-1">
+                                <IconContext.Provider value={{ size: 26 }}>
+                                    <WiWindDeg className="self-center" />{" "}
+                                </IconContext.Provider>
+                                {convertWindSpeed(
+                                    dataWeather.data?.current.weather.wd
+                                )}
+                            </p>
+                            <p className="flex gap-1">
+                                <IconContext.Provider value={{ size: 30 }}>
+                                    <WiBarometer className="self-center" />
+                                </IconContext.Provider>
+                                {dataWeather.data?.current.weather.pr}&nbsp; HPa
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-2 sm:gap-5 mt-10">
+                            <h2 className="text-2xl font-semibold">
+                                Air Quality Index
+                            </h2>
+                            <p
+                                className={`text-center text-xl border-2 p-3 ${changeColorWithAQI(
+                                    dataWeather.data?.current.pollution.aqius
+                                )} border-none font-semibold`}
+                            >
+                                {dataWeather.data?.current.pollution.aqius} -{" "}
+                                {convertAQIIntoMessage(
+                                    dataWeather.data?.current.pollution.aqius
+                                )}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             )}
         </>
