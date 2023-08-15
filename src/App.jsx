@@ -21,7 +21,7 @@ export const App = () => {
     useEffect(() => {
         setIsLoading(true);
         fetch(
-            `http://api.airvisual.com/v2/nearest_city?key=${
+            `https://api.airvisual.com/v2/nearest_city?key=${
                 import.meta.env.VITE_API_KEY
             }`
         )
