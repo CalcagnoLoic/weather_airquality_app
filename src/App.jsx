@@ -26,14 +26,14 @@ export const App = () => {
             }`
         )
             .then((res) => {
-                console.log(res);
+                //console.log(res);
                 if (!res.ok) {
                     throw new Error(`${res.status - res.statusText}`);
                 }
                 return res.json();
             })
             .then((data) => {
-                console.log(data);
+                //console.log(data);
                 setDataWeather(data);
                 setIsLoading(false);
                 setIsError(false);
