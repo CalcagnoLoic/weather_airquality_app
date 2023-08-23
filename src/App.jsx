@@ -105,7 +105,7 @@ export const App = () => {
                             </div>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-2 sm:gap-5 mb-5 justify-around sm:text-xl mt-8">
-                            <p className="flex gap-1">
+                            <p className="flex gap-1 justify-center sm:justify-start">
                                 <IconContext.Provider value={{ size: 26 }}>
                                     <WiStrongWind className="self-center" />
                                 </IconContext.Provider>
@@ -114,7 +114,7 @@ export const App = () => {
                                 )}{" "}
                                 km/h
                             </p>
-                            <p className="flex gap-1">
+                            <p className="flex gap-1 justify-center sm:justify-start">
                                 <IconContext.Provider value={{ size: 26 }}>
                                     <WiWindDeg className="self-center" />{" "}
                                 </IconContext.Provider>
@@ -122,7 +122,7 @@ export const App = () => {
                                     dataWeather.data?.current.weather.wd
                                 )}
                             </p>
-                            <p className="flex gap-1">
+                            <p className="flex gap-1 justify-center sm:justify-start">
                                 <IconContext.Provider value={{ size: 30 }}>
                                     <WiBarometer className="self-center" />
                                 </IconContext.Provider>
