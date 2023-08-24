@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Loader } from "./components/Loader";
 import {
     WiHumidity,
@@ -12,11 +12,14 @@ import { convertWindSpeed } from "./utils/functions/convertWindSpeed";
 import { convertIntoWeatherIcon } from "./utils/functions/convertIntoWeatherIcon";
 import { convertAQIIntoMessage } from "./utils/functions/convertAQIIntoMessage";
 import { changeColorWithAQI } from "./utils/colors/changeColor";
+import { ToggleThemeButton } from "./components/ToggleThemeButton";
+import { darkModeContext } from "./context/ThemeProvider";
 
 export const App = () => {
     const [dataWeather, setDataWeather] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
+    const { darkMode } = useContext(darkModeContext);
 
     useEffect(() => {
         setIsLoading(true);
@@ -56,6 +59,10 @@ export const App = () => {
 
     return (
         <>
+            <div className="absolute top-5 right-5 sm:top-12 sm:right-12 flex">
+                <ToggleThemeButton />
+            </div>
+
             {isError && (
                 <p className="text-white text-sm text-center p-5">
                     Try again in a few minutes...
@@ -64,7 +71,11 @@ export const App = () => {
             {isLoading ? (
                 <Loader />
             ) : (
-                <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-white shadow-2xl shadow-sky-950 mt-24 mb-24 sm:mb-0 sm:mt-0">
+                <div
+                    className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-white shadow-2xl ${
+                        darkMode ? "shadow-sky-950" : "shadow-slate-400"
+                    } mt-24 mb-24 sm:mb-0 sm:mt-0`}
+                >
                     <div className="mx-20 px-1 py-12 sm:mx-0 sm:p-12 text-center">
                         <div className="flex flex-col sm:flex-row gap-5 ">
                             <img
