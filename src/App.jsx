@@ -12,8 +12,9 @@ import { convertWindSpeed } from "./utils/functions/convertWindSpeed";
 import { convertIntoWeatherIcon } from "./utils/functions/convertIntoWeatherIcon";
 import { convertAQIIntoMessage } from "./utils/functions/convertAQIIntoMessage";
 import { changeColorWithAQI } from "./utils/colors/changeColor";
-import { ToggleThemeButton } from "./components/ToggleThemeButton";
 import { darkModeContext } from "./context/ThemeProvider";
+import { Header } from "./components/Header";
+import { FooterApp } from "./components/FooterApp";
 
 export const App = () => {
     const [dataWeather, setDataWeather] = useState({});
@@ -58,10 +59,8 @@ export const App = () => {
         today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
     return (
-        <>
-            <div className="absolute top-5 right-5 sm:top-12 sm:right-12 flex">
-                <ToggleThemeButton />
-            </div>
+        <div className="min-h-screen flex flex-col">
+            <Header />
 
             {isError && (
                 <p className="text-white text-sm text-center p-5">
@@ -71,13 +70,13 @@ export const App = () => {
             {isLoading ? (
                 <Loader />
             ) : (
-                <div
-                    className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-white shadow-2xl ${
-                        darkMode ? "shadow-sky-950" : "shadow-slate-400"
-                    } mt-24 mb-24 sm:mb-0 sm:mt-0`}
-                >
-                    <div className="mx-20 px-1 py-12 sm:mx-0 sm:p-12 text-center">
-                        <div className="flex flex-col sm:flex-row gap-5 ">
+                <div className="flex flex-grow justify-center items-center px-10 rounded-md my-5">
+                    <div
+                        className={`relative p-8 rounded text-center bg-white shadow-2xl ${
+                            darkMode ? "shadow-sky-950" : "shadow-slate-400"
+                        }`}
+                    >
+                        <div className="flex flex-col w-full sm:flex-row gap-5 ">
                             <img
                                 src={`${convertIntoWeatherIcon(
                                     dataWeather.data?.current.weather.ic
@@ -158,6 +157,7 @@ export const App = () => {
                     </div>
                 </div>
             )}
-        </>
+            <FooterApp />
+        </div>
     );
 };

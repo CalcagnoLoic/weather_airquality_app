@@ -18,7 +18,7 @@ export const ToggleThemeButton = () => {
             )}
             <Switch defaultChecked color="default" onClick={toggleTheme} />
             {darkMode ? (
-                <IconContext.Provider value={{ color: "yellow", size: "2em" }}>
+                <IconContext.Provider value={{ color: "orange", size: "2em" }}>
                     <BsFillSunFill className="self-center" />
                 </IconContext.Provider>
             ) : (
